@@ -38,6 +38,20 @@ def get_movie_byid(movieid):
     return make_response(jsonify({"error": "Movie ID not found"}), 400)
 
 
+@app.route("/moviesratingbetterthan/<rating>", methods=['GET'])
+def get_movie_with_rating_better_than(rating):
+    movies_json_list = []
+
+    for movie in movies:
+        if float(movie["rating"]) > float(rating):
+            movies_json_list.append(movie)
+
+    if movies_json_list:
+        res = make_response(jsonify(movies_json_list), 200)
+        return res
+    return make_response(jsonify({"error": "Movie with rate better than " + str(rating) + " not found"}), 400)
+
+
 @app.route("/moviesbytitle", methods=['GET'])
 def get_movie_bytitle():
     json = ""
