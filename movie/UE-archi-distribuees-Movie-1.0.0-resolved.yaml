@@ -179,6 +179,31 @@ paths:
           description: rate updated
         "400":
           description: movie ID not found
+  /moviesratingbetterthan/{rate}:
+    put:
+      tags:
+        - developers
+      summary: get movies wich have a better rate than a number
+      description: Get movies wich have a better rate than a number of our choice
+      operationId: get_movies_with_rating_better_than
+      parameters:
+        - name: rate
+          in: path
+          description: Rate.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: float
+      responses:
+        "200":
+          description: Movie description
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItem'
+        "400":
+          description: there is no object with a rate better than your number
 components:
   schemas:
     AllMovies:
