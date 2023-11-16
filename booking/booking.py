@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 PORT = 3201
 HOST = '0.0.0.0'
+SHOWTIME_SERVICE_URL = "http://localhost:3202"
 
 with open('{}/databases/bookings.json'.format("."), "r") as jsf:
     bookings = json.load(jsf)["bookings"]
@@ -36,9 +37,11 @@ def get_booking_for_user(userid):
 def add_booking_byuser(userid):
     req = request.get_json()
 
-    for booking in bookings:
-        if booking["dates"] == req["dates"]:
-            return make_response(jsonify({"error": "booking already exists for this day"}), 409)
+    for date in req["dates"]:
+        showtime_response = requests.get(f"{SHOWTIME_SERVICE_URL}/showmovies/{date['date']}")
+        for movie in date["movies"]:
+            if movie not in showtime_response.json()[1]:
+                return make_response(jsonify({"error": "one of selected movies is not available for these date"}), 409)
 
     bookings.append(req)
     res = make_response(jsonify({"message": "booking added"}), 200)
