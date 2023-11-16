@@ -26,10 +26,11 @@ def get_json():
 
 @app.route("/bookings/<userid>", methods=['GET'])
 def get_booking_for_user(userid):
-    for booking in bookings:
-        if str(booking["userid"]) == str(userid):
-            res = make_response(jsonify(booking), 200)
-            return res
+    matching_bookings = [booking for booking in bookings if str(booking["userid"]) == str(userid)]
+
+    if matching_bookings:
+        return jsonify(matching_bookings), 200
+
     return make_response(jsonify({"error": "Booking User ID not found"}), 400)
 
 
