@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: User Service API
+  description: This is the API of the User service
+  contact:
+    name: Frédéric EGENSCHEVILLER & Baptiste Laborde
+    email: frederic.egenscheviller@imt-atlantique.net & baptiste.laborde@imt-atlantique.net
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+tags:
+- name: users
+  description: Operations related to users
+- name: bookings
+  description: Operations related to user bookings
+paths:
+  /:
+    get:
+      tags:
+      - users
+      summary: Home page of the service
+      operationId: home
+      responses:
+        "200":
+          description: Welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <h1>Welcome to the User service!</h1>
+
+  /user-bookings/{userid}:
+    get:
+      tags:
+      - bookings
+      summary: Get user bookings
+      operationId: get_user_bookings
+      parameters:
+      - name: userid
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: User bookings
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"booking": "details"}
+        "400":
+          description: User ID not found in Booking service
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"error": "User ID not found in Booking service"}
+
+  /user-bookings/{userid}/detailed:
+    get:
+      tags:
+      - bookings
+      summary: Get detailed user bookings
+      operationId: get_detailed_userbookings
+      parameters:
+      - name: userid
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Detailed user bookings
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"booking": "details"}
+        "400":
+          description: User ID not found in Booking service
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"error": "User ID not found in Booking service"}

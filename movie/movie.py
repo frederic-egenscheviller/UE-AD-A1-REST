@@ -1,7 +1,6 @@
-from flask import Flask, render_template, request, jsonify, make_response
 import json
-import sys
-from werkzeug.exceptions import NotFound
+
+from flask import Flask, render_template, request, jsonify, make_response
 
 app = Flask(__name__)
 
@@ -35,7 +34,7 @@ def get_movie_byid(movieid):
         if str(movie["id"]) == str(movieid):
             res = make_response(jsonify(movie), 200)
             return res
-    return make_response(jsonify({"error": "Movie ID not found"}), 400)
+    return make_response(jsonify({"error": "movie ID not found"}), 400)
 
 
 @app.route("/moviesratingbetterthan/<rate>", methods=['GET'])
@@ -49,35 +48,28 @@ def get_movie_with_rating_better_than(rate):
     if movies_json_list:
         res = make_response(jsonify(movies_json_list), 200)
         return res
-    return make_response(jsonify({"error": "Movie with rate better than " + str(rate) + " not found"}), 400)
+    return make_response(jsonify({"error": "movie with rate better than " + str(rate) + " not found"}), 400)
 
 
-@app.route("/moviesbytitle", methods=['GET'])
-def get_movie_bytitle():
-    json = ""
-    if request.args:
-        req = request.args
-        for movie in movies:
-            if str(movie["title"]) == str(req["title"]):
-                json = movie
+@app.route("/moviesbytitle/<movietitle>", methods=['GET'])
+def get_movie_bytitle(movietitle):
+    for movie in movies:
+        if str(movie["title"]) == str(movietitle):
+            return make_response(jsonify(movie), 200)
 
-    if not json:
-        res = make_response(jsonify({"error": "movie title not found"}), 400)
-    else:
-        res = make_response(jsonify(json), 200)
-    return res
+    return make_response(jsonify({"error": "movie title not found"}), 400)
 
 
-@app.route("/movies/<movieid>", methods=['POST'])
-def create_movie(movieid):
+@app.route("/movies", methods=['POST'])
+def create_movie():
     req = request.get_json()
 
     for movie in movies:
-        if str(movie["id"]) == str(movieid):
+        if str(movie["id"]) == str(req["id"]):
             return make_response(jsonify({"error": "movie ID already exists"}), 409)
 
     movies.append(req)
-    res = make_response(jsonify({"message": "movie added"}), 200)
+    res = make_response(jsonify(req), 200)
     return res
 
 
@@ -86,6 +78,20 @@ def update_movie_rating(movieid, rate):
     for movie in movies:
         if str(movie["id"]) == str(movieid):
             movie["rating"] = float(rate)
+            res = make_response(jsonify(movie), 200)
+            return res
+
+    res = make_response(jsonify({"error": "movie ID not found"}), 201)
+    return res
+
+
+@app.route("/movies/<movieid>", methods=['PUT'])
+def update_movie(movieid):
+    req = request.get_json()
+
+    for movie in movies:
+        if str(movie["id"]) == str(movieid):
+            movie.update(req)
             res = make_response(jsonify(movie), 200)
             return res
 
