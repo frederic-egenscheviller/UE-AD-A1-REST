@@ -7,8 +7,8 @@ app = Flask(__name__)
 PORT = 3203
 HOST = '0.0.0.0'
 
-MOVIE_SERVICE_URL = "http://localhost:3200"
-BOOKING_SERVICE_URL = "http://localhost:3201"
+MOVIE_SERVICE_URL = "http://movie:3200"
+BOOKING_SERVICE_URL = "http://booking:3201"
 
 with open('{}/databases/users.json'.format("."), "r") as jsf:
     users = json.load(jsf)["users"]
