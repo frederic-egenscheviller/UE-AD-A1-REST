@@ -218,6 +218,53 @@ paths:
                 $ref: '#/components/schemas/MovieItem'
         "400":
           description: there is no object with a rate better than your number
+  /movies-released/{title}:
+    get:
+      tags:
+        - developers
+      summary: get details of a movie by its title
+      description: Get details of a movie by its title
+      operationId: get_movie_released_date
+      parameters:
+        - name: title
+          in: path
+          description: The title of the movie.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: JSON response with movie details
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "02 Oct 2015"
+        "400":
+          description: Movie title not found
+  /moviesbytitle/{movietitle}/detailed:
+    get:
+      tags:
+        - developers
+      summary: get details of a movie by its title
+      description: Get details of a movie by its title
+      operationId: get_movie_detailed
+      parameters:
+        - name: movietitle
+          in: path
+          description: The title of the movie.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: JSON response with movie details
+          content:
+            application/json:
+              schema:
+                type: json
+        "400":
+          description: Movie title not found
 components:
   schemas:
     AllMovies:
