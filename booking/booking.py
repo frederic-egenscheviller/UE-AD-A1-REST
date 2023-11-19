@@ -87,12 +87,22 @@ def update_booking_byuser(userid):
         Response: JSON response containing the updated booking information or an error message.
     """
     req = request.get_json()
-    for booking in bookings:
-        if str(booking["userid"]) == str(userid):
-            booking["dates"] = req["dates"]
-            return make_response(jsonify(req), 200)
-    bookings.append(req)
-    return make_response(jsonify(req), 200)
+
+    for date in req["dates"]:
+        showtime_response = requests.get(f"{SHOWTIME_SERVICE_URL}/showmovies/{date['date']}")
+        for movie in date["movies"]:
+            if movie not in showtime_response.json()[1]:
+                return make_response(jsonify({"error": "one of selected movies is not available for these date"}),
+                                     409)
+
+    if req["userid"] not in [booking["userid"] for booking in bookings]:
+        bookings.append(req)
+        return make_response(jsonify(req), 200)
+    else:
+        for booking in bookings:
+            if str(booking["userid"]) == str(userid):
+                booking["dates"] = req["dates"]
+                return make_response(jsonify(req), 200)
 
 
 @app.route("/bookings/<userid>", methods=['DELETE'])

@@ -3,7 +3,7 @@ info:
   title: User Service API
   description: This is the API of the User service
   contact:
-    name: Frédéric EGENSCHEVILLER & Baptiste Laborde
+    name: Frédéric EGENSCHEVILLER & Baptiste LABORDE
     email: frederic.egenscheviller@imt-atlantique.net & baptiste.laborde@imt-atlantique.net
   license:
     name: GPL v3

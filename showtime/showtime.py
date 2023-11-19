@@ -92,8 +92,8 @@ def delete_showtime(date):
     return make_response(jsonify({"error": "no schedule found on that date"}), 400)
 
 
-@app.route("/showtimes/<date>", methods=['GET'])
-def get_showtime_bydate(date):
+@app.route("/showmovies/<date>", methods=['GET'])
+def get_showmovies_bydate(date):
     """
     Get details of a showtime by date.
 

@@ -1,4 +1,6 @@
 import json
+
+import requests
 from flask import Flask, render_template, request, jsonify, make_response
 
 app = Flask(__name__)
@@ -6,6 +8,8 @@ app = Flask(__name__)
 # Configuration
 PORT = 3200
 HOST = '0.0.0.0'
+OMBDAPI = 'http://www.omdbapi.com/'
+API_KEY = '4e8a7dad'
 
 # Load initial movies data from a JSON file
 with open('{}/databases/movies.json'.format("."), "r") as jsf:
@@ -188,6 +192,54 @@ def del_movie(movieid):
 
     res = make_response(jsonify({"error": "movie ID not found"}), 400)
     return res
+
+
+@app.route("/movies-released/<title>", methods=['GET'])
+def get_movie_released_date(title):
+    """
+    Get details of a movie by its title.
+
+    Args:
+        title (str): The title of the movie.
+
+    Returns:
+        Response: JSON response with movie details or an error message.
+    """
+    params = {
+        't': title,
+        'apikey': API_KEY
+    }
+
+    response = requests.get(OMBDAPI, params=params)
+
+    if response.status_code == 200:
+        return make_response(jsonify(response.json().get("Released")), 200)
+    else:
+        make_response(jsonify({"error": "movie title not found"}), 400)
+
+
+@app.route("/moviesbytitle/<movietitle>/detailed", methods=['GET'])
+def get_movie_detailed(movietitle):
+    """
+    Get details of a movie by its title.
+
+    Args:
+        title (str): The title of the movie.
+
+    Returns:
+        Response: JSON response with movie details or an error message.
+    """
+    params = {
+        't': movietitle,
+        'apikey': API_KEY
+    }
+
+    response = requests.get(OMBDAPI, params=params)
+
+    if response.status_code == 200:
+        return make_response(jsonify(response.json()), 200)
+    else:
+        make_response(jsonify({"error": "movie title not found"}), 400)
 
 
 if __name__ == "__main__":
