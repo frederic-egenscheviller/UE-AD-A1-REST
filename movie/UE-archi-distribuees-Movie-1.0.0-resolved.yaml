@@ -1,9 +1,8 @@
----
 openapi: 3.1.0
 info:
   title: Movie API
   summary: This is the API of the Movie service
-  description: This is the API of the Movie service, it should be much much much much much much much much much much much much much much much much much much much much much longer
+  description: This is the API of the Movie service
   contact:
     name: Helene Coullon
     url: https://helene-coullon.fr/
@@ -49,6 +48,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllMovies'
+    post:
+      tags:
+      - admins
+      summary: add a movie item
+      description: Adds a movie to the system
+      operationId: create_movie
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieItem'
+      responses:
+        "200":
+          description: Movie created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItem'
+        "409":
+          description: an existing item already exists
   /movies/{movieid}:
     get:
       tags:
@@ -72,36 +92,34 @@ paths:
                 $ref: '#/components/schemas/MovieItem'
         "400":
           description: bad input parameter
-    post:
+    put:
       tags:
       - admins
-      summary: add a movie item
-      description: Adds a movie to the system
-      operationId: create_movie
+      summary: update a movie
+      description: update the details of a movie by its ID
+      operationId: update_movie
       parameters:
       - name: movieid
         in: path
         description: Movie ID.
         required: true
-        style: simple
-        explode: false
         schema:
           type: string
       requestBody:
-        description: Inventory item to add
+        description: Updated movie details
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/MovieItem'
       responses:
         "200":
-          description: Movie created
+          description: Movie updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MovieItem'
-        "409":
-          description: an existing item already exists
+        "400":
+          description: movie ID not found
     delete:
       tags:
       - admins
@@ -113,8 +131,6 @@ paths:
         in: path
         description: Movie ID.
         required: true
-        style: simple
-        explode: false
         schema:
           type: string
       responses:
@@ -153,15 +169,13 @@ paths:
       tags:
       - admins
       summary: update a movie rate
-      description: update the rating of a movie
+      description: update the rating of a movie by its ID
       operationId: update_movie_rating
       parameters:
       - name: movieid
         in: path
         description: Movie ID.
         required: true
-        style: simple
-        explode: false
         schema:
           type: string
       - name: rate
@@ -180,11 +194,11 @@ paths:
         "400":
           description: movie ID not found
   /moviesratingbetterthan/{rate}:
-    put:
+    get:
       tags:
         - developers
-      summary: get movies wich have a better rate than a number
-      description: Get movies wich have a better rate than a number of our choice
+      summary: get movies which have a better rate than a number
+      description: Get movies which have a better rate than a number of our choice
       operationId: get_movies_with_rating_better_than
       parameters:
         - name: rate
@@ -236,5 +250,3 @@ components:
         id:
           type: string
           example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
-
-

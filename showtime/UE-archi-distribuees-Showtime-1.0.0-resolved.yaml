@@ -1,4 +1,3 @@
----
 openapi: 3.1.0
 info:
   title: Showtime API
@@ -10,8 +9,6 @@ info:
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
   version: 1.0.0
 tags:
-- name: admins
-  description: Secured Admin-only calls
 - name: developers
   description: Operations available to regular developers
 paths:
@@ -28,7 +25,7 @@ paths:
             text/html:
               schema:
                 type: string
-                example: <h1>Test</h1>
+                example: <h1 style='color:blue'>Welcome to the Showtime service!</h1>
   /showtimes:
     get:
       tags:
@@ -42,12 +39,61 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllSchedule'
-  /showmovies/{date}:
-    get:
+    post:
       tags:
       - developers
-      summary: get the schedule by date
-      operationId: get_movies_bydate
+      summary: create a new showtime
+      operationId: create_showtime
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+      responses:
+        "200":
+          description: new showtime created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        "400":
+          description: schedule already exists for that date
+  /showtimes/{date}:
+    put:
+      tags:
+      - developers
+      summary: update an existing showtime by date
+      operationId: update_showtime
+      parameters:
+      - name: date
+        in: path
+        description: date.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+      responses:
+        "200":
+          description: showtime updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        "400":
+          description: no schedule found on that date
+    delete:
+      tags:
+      - developers
+      summary: delete an existing showtime by date
+      operationId: delete_showtime
       parameters:
       - name: date
         in: path
@@ -59,13 +105,36 @@ paths:
           type: string
       responses:
         "200":
-          description: Schedule
+          description: showtime deleted
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Schedule'
         "400":
-          description: bad input parameter
+          description: no schedule found on that date
+    get:
+      tags:
+      - developers
+      summary: get details of a showtime by date
+      operationId: get_showtime_bydate
+      parameters:
+      - name: date
+        in: path
+        description: date.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: showtime details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        "400":
+          description: no movie scheduled at this date
 components:
   schemas:
     AllSchedule:

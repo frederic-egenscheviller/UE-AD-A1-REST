@@ -10,84 +10,56 @@ info:
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
   version: 1.0.0
 tags:
-- name: admins
-  description: Secured Admin-only calls
-- name: developers
-  description: Operations available to regular developers
+  - name: developers
+    description: Operations available to regular developers
 paths:
   /:
     get:
       tags:
-      - developers
-      summary: home page of the service
-      description: |
-        Nothing to do
+        - developers
+      summary: Home page of the service
+      description: Nothing to do
       operationId: home
       responses:
         "200":
-          description: welcome message
+          description: Welcome message
           content:
             text/html:
               schema:
                 type: string
-                example: <h1>Test</h1>
+                example: "<h1 style='color:blue'>Welcome to the Booking service!</h1>"
   /bookings:
     get:
       tags:
-      - developers
-      summary: get the full JSON database
-      description: |
-        Nothing to do
+        - developers
+      summary: Get the full JSON database
+      description: Nothing to do
       operationId: get_json
       responses:
         "200":
-          description: full JSON
+          description: Full JSON
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllBookings'
-  /bookings/{userid}:
-    get:
-      tags:
-      - developers
-      summary: get the bookings from a user id
-      description: By passing in the appropriate options, you can get bookings of a user
-      operationId: get_booking_for_user
-      parameters:
-      - name: userid
-        in: path
-        description: User ID.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: Bookings of the user
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BookingsUser'
-        "400":
-          description: bad input parameter
     post:
       tags:
-      - admins
-      summary: add a booking for a user
-      description: Adds a booking for the user, the service showtimes have to be requested to check the validity of the booking that is asked
+        - admins
+      summary: Add a booking for a user
+      description: Adds a booking for the user. The service showtimes have to be requested to check the validity of the booking that is asked.
       operationId: add_booking_byuser
       parameters:
-      - name: userid
-        in: path
-        description: User ID.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: userid
+          in: path
+          description: User ID.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       requestBody:
-        description: item to add
+        description: Item to add
+        required: true
         content:
           application/json:
             schema:
@@ -100,7 +72,85 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookingsUser'
         "409":
-          description: an existing item already exists
+          description: An existing item already exists
+  /bookings/{userid}:
+    get:
+      tags:
+        - developers
+      summary: Get the bookings from a user ID
+      description: By passing in the appropriate options, you can get bookings of a user
+      operationId: get_booking_for_user
+      parameters:
+        - name: userid
+          in: path
+          description: User ID.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Bookings of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingsUser'
+        "400":
+          description: Bad input parameter
+    put:
+      tags:
+        - developers
+      summary: Update booking information for a specific user by user ID
+      operationId: update_booking_byuser
+      parameters:
+        - name: userid
+          in: path
+          description: User ID.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        description: Updated booking information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingsUser'
+      responses:
+        "200":
+          description: Updated booking information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingsUser'
+        "400":
+          description: Bad input parameter
+    delete:
+      tags:
+        - developers
+      summary: Delete a booking for a specific user by user ID
+      operationId: delete_booking_byuser
+      parameters:
+        - name: userid
+          in: path
+          description: User ID.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deleted booking information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingsUser'
+        "400":
+          description: Bad input parameter
 components:
   schemas:
     AllBookings:
@@ -109,8 +159,8 @@ components:
         $ref: '#/components/schemas/BookingsUser'
     BookingsUser:
       required:
-      - dates
-      - userid
+        - dates
+        - userid
       type: object
       properties:
         userid:
@@ -122,8 +172,8 @@ components:
             $ref: '#/components/schemas/DateItem'
     DateItem:
       required:
-      - date
-      - movies
+        - date
+        - movies
       type: object
       properties:
         date:
@@ -136,8 +186,8 @@ components:
             example: 276c79ec-a26a-40a6-b3d3-fb242a5947b6
     NewMovie:
       required:
-      - date
-      - movieid
+        - date
+        - movieid
       type: object
       properties:
         date:
