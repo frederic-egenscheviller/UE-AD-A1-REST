@@ -87,9 +87,10 @@ def update_booking_byuser(userid):
         Response: JSON response containing the updated booking information or an error message.
     """
     req = request.get_json()
-
     for date in req["dates"]:
         showtime_response = requests.get(f"{SHOWTIME_SERVICE_URL}/showmovies/{date['date']}")
+        if showtime_response.status_code == 400:
+            return make_response(jsonify({"error": "one of selected movies is not available for these date"}), 400)
         for movie in date["movies"]:
             if movie not in showtime_response.json()[1]:
                 return make_response(jsonify({"error": "one of selected movies is not available for these date"}),

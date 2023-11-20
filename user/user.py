@@ -206,7 +206,7 @@ def update_booking_byuser(userid):
     Returns:
         Response: JSON response containing the updated booking information or an error message.
     """
-    response = requests.put(f"{BOOKING_SERVICE_URL}/bookings", json=request.get_json())
+    response = requests.put(f"{BOOKING_SERVICE_URL}/bookings/{userid}", json=request.get_json())
     return make_response(jsonify(response.json()), response.status_code)
 
 
@@ -324,21 +324,6 @@ def del_movie(movieid):
     return make_response(jsonify(response.json()), response.status_code)
 
 
-@app.route("/movies-released/<title>", methods=['GET'])
-def get_movie_released_date(title):
-    """
-    Get details of a movie by its title.
-
-    Args:
-        title (str): The title of the movie.
-
-    Returns:
-        Response: JSON response with movie details or an error message.
-    """
-    response = requests.get(f"{MOVIE_SERVICE_URL}/movies-released/{title}")
-    return make_response(jsonify(response.json()), response.status_code)
-
-
 @app.route("/movies/<movieid>/<rate>", methods=['PUT'])
 def update_movie_rating(movieid, rate):
     """
@@ -367,6 +352,21 @@ def get_movie_detailed(movietitle):
         Response: JSON response with movie details or an error message.
     """
     response = requests.get(f"{MOVIE_SERVICE_URL}/moviesbytitle/{movietitle}/detailed")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/movies-released/<title>", methods=['GET'])
+def get_movie_released_date(title):
+    """
+    Get details of a movie by its title.
+
+    Args:
+        title (str): The title of the movie.
+
+    Returns:
+        Response: JSON response with movie details or an error message.
+    """
+    response = requests.get(f"{MOVIE_SERVICE_URL}/movies-released/{title}")
     return make_response(jsonify(response.json()), response.status_code)
 
 
