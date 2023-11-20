@@ -156,6 +156,289 @@ def get_detailed_userbookings(userid):
         return make_response(jsonify({"error": "user ID not found in Booking service"}), 400)
 
 
+@app.route("/bookings", methods=['GET'])
+def get_booking_json():
+    """
+    Retrieves all bookings in JSON format.
+
+    Returns:
+        Response: JSON response containing all bookings.
+    """
+    response = requests.get(f"{BOOKING_SERVICE_URL}/bookings")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/bookings/<userid>", methods=['GET'])
+def get_booking_for_user(userid):
+    """
+    Retrieves booking information for a specific user by user ID.
+
+    Args:
+        userid (str): User ID.
+
+    Returns:
+        Response: JSON response containing booking information or an error message.
+    """
+    response = requests.get(f"{BOOKING_SERVICE_URL}/bookings/{userid}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/bookings", methods=['POST'])
+def create_booking():
+    """
+    Adds a new booking based on the JSON request.
+
+    Returns:
+        Response: JSON response containing the new booking information or an error message.
+    """
+    response = requests.post(f"{BOOKING_SERVICE_URL}/bookings", json=request.get_json())
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/bookings/<userid>", methods=['PUT'])
+def update_booking_byuser(userid):
+    """
+    Updates booking information for a specific user by user ID based on the JSON request.
+
+    Args:
+        userid (str): User ID.
+
+    Returns:
+        Response: JSON response containing the updated booking information or an error message.
+    """
+    response = requests.put(f"{BOOKING_SERVICE_URL}/bookings", json=request.get_json())
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/bookings/<userid>", methods=['DELETE'])
+def delete_booking_byuser(userid):
+    """
+    Deletes a booking for a specific user by user ID.
+
+    Args:
+        userid (str): User ID.
+
+    Returns:
+        Response: JSON response containing the deleted booking information or an error message.
+    """
+    response = requests.delete(f"{BOOKING_SERVICE_URL}/bookings/{userid}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/movies", methods=['GET'])
+def get_movies_json():
+    """
+    Retrieve all movies in JSON format.
+
+    Returns:
+        Response: JSON response with the list of movies.
+    """
+    response = requests.get(f"{MOVIE_SERVICE_URL}/json")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/movies/<movieid>", methods=['GET'])
+def get_movie_byid(movieid):
+    """
+    Get details of a movie by its ID.
+
+    Args:
+        movieid (str): The ID of the movie.
+
+    Returns:
+        Response: JSON response with movie details or an error message.
+    """
+    response = requests.get(f"{MOVIE_SERVICE_URL}/movies/{movieid}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/moviesratingbetterthan/<rate>", methods=['GET'])
+def get_movie_with_rating_better_than(rate):
+    """
+    Get movies with a rating better than a specified value.
+
+    Args:
+        rate (str): The minimum rating.
+
+    Returns:
+        Response: JSON response with the list of movies or an error message.
+    """
+    response = requests.get(f"{MOVIE_SERVICE_URL}/moviesratingbetterthan/{rate}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/moviesbytitle/<movietitle>", methods=['GET'])
+def get_movie_bytitle(movietitle):
+    """
+    Get details of a movie by its title.
+
+    Args:
+        movietitle (str): The title of the movie.
+
+    Returns:
+        Response: JSON response with movie details or an error message.
+    """
+    response = requests.get(f"{MOVIE_SERVICE_URL}/moviesbytitle/{movietitle}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/movies", methods=['POST'])
+def create_movie():
+    """
+    Create a new movie.
+
+    Returns:
+        Response: JSON response with the new movie details or an error message.
+    """
+    response = requests.post(f"{MOVIE_SERVICE_URL}/movies", json=request.get_json())
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/movies/<movieid>", methods=['PUT'])
+def update_movie(movieid):
+    """
+    Update the details of a movie by its ID.
+
+    Args:
+        movieid (str): The ID of the movie.
+
+    Returns:
+        Response: JSON response with the updated movie details or an error message.
+    """
+    response = requests.put(f"{MOVIE_SERVICE_URL}/movies/{movieid}", json=request.get_json())
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/movies/<movieid>", methods=['DELETE'])
+def del_movie(movieid):
+    """
+    Delete a movie by its ID.
+
+    Args:
+        movieid (str): The ID of the movie.
+
+    Returns:
+        Response: JSON response with the deleted movie details or an error message.
+    """
+    response = requests.delete(f"{MOVIE_SERVICE_URL}/movies/{movieid}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/movies-released/<title>", methods=['GET'])
+def get_movie_released_date(title):
+    """
+    Get details of a movie by its title.
+
+    Args:
+        title (str): The title of the movie.
+
+    Returns:
+        Response: JSON response with movie details or an error message.
+    """
+    response = requests.get(f"{MOVIE_SERVICE_URL}/movies-released/{title}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/movies/<movieid>/<rate>", methods=['PUT'])
+def update_movie_rating(movieid, rate):
+    """
+    Update the rating of a movie by its ID.
+
+    Args:
+        movieid (str): The ID of the movie.
+        rate (str): The new rating.
+
+    Returns:
+        Response: JSON response with the updated movie details or an error message.
+    """
+    response = requests.put(f"{MOVIE_SERVICE_URL}/movies/{movieid}/{rate}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/moviesbytitle/<movietitle>/detailed", methods=['GET'])
+def get_movie_detailed(movietitle):
+    """
+    Get details of a movie by its title.
+
+    Args:
+        movietitle (str): The title of the movie.
+
+    Returns:
+        Response: JSON response with movie details or an error message.
+    """
+    response = requests.get(f"{MOVIE_SERVICE_URL}/moviesbytitle/{movietitle}/detailed")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/showtimes", methods=['GET'])
+def get_showtimes():
+    """
+    Retrieve all showtimes.
+
+    Returns:
+        Response: JSON response containing the schedule.
+    """
+    response = requests.get(f"{BOOKING_SERVICE_URL}/showtimes")
+    return make_response(jsonify(response.json()), 200)
+
+
+@app.route("/showtimes", methods=['POST'])
+def create_showtime():
+    """
+    Create a new showtime.
+
+    Returns:
+        Response: JSON response with the new showtime or an error message.
+    """
+    response = requests.post(f"{BOOKING_SERVICE_URL}/showtimes", json=request.get_json())
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/showtimes/<date>", methods=['PUT'])
+def update_showtime(date):
+    """
+    Update an existing showtime by date.
+
+    Args:
+        date (str): The date of the showtime to update.
+
+    Returns:
+        Response: JSON response with the updated showtime or an error message.
+    """
+    response = requests.put(f"{BOOKING_SERVICE_URL}/showtimes/{date}", json=request.get_json())
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/showtimes/<date>", methods=['DELETE'])
+def delete_showtime(date):
+    """
+    Delete an existing showtime by date.
+
+    Args:
+        date (str): The date of the showtime to delete.
+
+    Returns:
+        Response: JSON response with the deleted showtime or an error message.
+    """
+    response = requests.delete(f"{BOOKING_SERVICE_URL}/showtimes/{date}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/showmovies/<date>", methods=['GET'])
+def get_showmovies_bydate(date):
+    """
+    Get details of a showtime by date.
+
+    Args:
+        date (str): The date of the showtime.
+
+    Returns:
+        Response: JSON response with the showtime details or an error message.
+    """
+    response = requests.get(f"{BOOKING_SERVICE_URL}/showmovies/{date}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
 if __name__ == "__main__":
     print("Server running in port %s" % PORT)
     app.run(host=HOST, port=PORT)

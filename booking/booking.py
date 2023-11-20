@@ -123,6 +123,75 @@ def delete_booking_byuser(userid):
     return make_response(jsonify({"error": "no booking found with that user ID"}), 400)
 
 
+@app.route("/showtimes", methods=['GET'])
+def get_showtimes():
+    """
+    Retrieve all showtimes.
+
+    Returns:
+        Response: JSON response containing the schedule.
+    """
+    response = requests.get(f"{SHOWTIME_SERVICE_URL}/showtimes")
+    return make_response(jsonify(response.json()), 200)
+
+
+@app.route("/showtimes", methods=['POST'])
+def create_showtime():
+    """
+    Create a new showtime.
+
+    Returns:
+        Response: JSON response with the new showtime or an error message.
+    """
+    response = requests.post(f"{SHOWTIME_SERVICE_URL}/showtimes", json=request.get_json())
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/showtimes/<date>", methods=['PUT'])
+def update_showtime(date):
+    """
+    Update an existing showtime by date.
+
+    Args:
+        date (str): The date of the showtime to update.
+
+    Returns:
+        Response: JSON response with the updated showtime or an error message.
+    """
+    response = requests.put(f"{SHOWTIME_SERVICE_URL}/showtimes/{date}", json=request.get_json())
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/showtimes/<date>", methods=['DELETE'])
+def delete_showtime(date):
+    """
+    Delete an existing showtime by date.
+
+    Args:
+        date (str): The date of the showtime to delete.
+
+    Returns:
+        Response: JSON response with the deleted showtime or an error message.
+    """
+    response = requests.delete(f"{SHOWTIME_SERVICE_URL}/showtimes/{date}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
+@app.route("/showmovies/<date>", methods=['GET'])
+def get_showmovies_bydate(date):
+    """
+    Get details of a showtime by date.
+
+    Args:
+        date (str): The date of the showtime.
+
+    Returns:
+        Response: JSON response with the showtime details or an error message.
+    """
+    response = requests.get(f"{SHOWTIME_SERVICE_URL}/showmovies/{date}")
+    return make_response(jsonify(response.json()), response.status_code)
+
+
 if __name__ == "__main__":
     print("Server running in port %s" % PORT)
     app.run(host=HOST, port=PORT)
