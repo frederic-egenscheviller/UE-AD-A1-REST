@@ -82,6 +82,7 @@ def get_movie_with_rating_better_than(rate):
     movies_json_list = []
 
     for movie in movies:
+        # Check if the movie rating is better than the specified value
         if float(movie["rating"]) > float(rate):
             movies_json_list.append(movie)
 
@@ -213,6 +214,7 @@ def get_movie_released_date(title):
     response = requests.get(OMBDAPI, params=params)
 
     if response.status_code == 200:
+        # Return only the released date of the movie using the OMDb API
         return make_response(jsonify(response.json().get("Released")), 200)
     else:
         make_response(jsonify({"error": "movie title not found"}), 400)
@@ -237,6 +239,7 @@ def get_movie_detailed(movietitle):
     response = requests.get(OMBDAPI, params=params)
 
     if response.status_code == 200:
+        # Return all the details of the movie using the OMDb API
         return make_response(jsonify(response.json()), 200)
     else:
         make_response(jsonify({"error": "movie title not found"}), 400)

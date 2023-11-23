@@ -116,6 +116,7 @@ def get_user_bookings(userid):
     Returns:
         Response: JSON response containing user bookings or an error message.
     """
+    # Get bookings from Booking service by user ID
     booking_response = requests.get(f"{BOOKING_SERVICE_URL}/bookings/{userid}")
 
     if booking_response.status_code == 200:
@@ -136,16 +137,19 @@ def get_detailed_userbookings(userid):
     Returns:
         Response: JSON response containing detailed user bookings or an error message.
     """
+    # Get bookings from Booking service by user ID
     booking_response = requests.get(f"{BOOKING_SERVICE_URL}/bookings/{userid}")
 
     if booking_response.status_code == 200:
         user_bookings = booking_response.json()
         movie_infos = []
         for booking in user_bookings['dates']:
+            # Get movie information from Movie service by movie ID for each movie
             for movie in booking['movies']:
                 movie_response = requests.get(f"{MOVIE_SERVICE_URL}/movies/{movie}")
                 movie_infos.append(movie_response.json())
 
+        # Map movie information to each movie in the booking
         movie_info_map = {movie['id']: movie for movie in movie_infos}
         for date_info in user_bookings['dates']:
             for i, movie_id in enumerate(date_info['movies']):

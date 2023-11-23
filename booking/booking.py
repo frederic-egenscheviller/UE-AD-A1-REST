@@ -64,6 +64,7 @@ def add_booking():
 
     if req["userid"] not in [booking["userid"] for booking in bookings]:
         for date in req["dates"]:
+            # Check if the movie is available for the date
             showtime_response = requests.get(f"{SHOWTIME_SERVICE_URL}/showmovies/{date['date']}")
             for movie in date["movies"]:
                 if movie not in showtime_response.json()[1]:
@@ -88,6 +89,7 @@ def update_booking_byuser(userid):
     """
     req = request.get_json()
     for date in req["dates"]:
+        # Check if the movie is available for the date
         showtime_response = requests.get(f"{SHOWTIME_SERVICE_URL}/showmovies/{date['date']}")
         if showtime_response.status_code == 400:
             return make_response(jsonify({"error": "one of selected movies is not available for these date"}), 400)
@@ -96,12 +98,14 @@ def update_booking_byuser(userid):
                 return make_response(jsonify({"error": "one of selected movies is not available for these date"}),
                                      409)
 
+    # Check if the user has a booking
     if req["userid"] not in [booking["userid"] for booking in bookings]:
         bookings.append(req)
         return make_response(jsonify(req), 200)
     else:
         for booking in bookings:
             if str(booking["userid"]) == str(userid):
+                # Update booking dates if the user already has a booking
                 booking["dates"] = req["dates"]
                 return make_response(jsonify(req), 200)
 
