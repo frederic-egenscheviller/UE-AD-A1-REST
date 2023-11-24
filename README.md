@@ -21,12 +21,14 @@ docker-compose up
 ## Demandes ✍️
 
 4 microservices :
-- user
-- booking
-- movie
-- showtime
+- user REST
+- booking REST
+- movie REST
+- showtime REST
 
 Les microservices sont tous des API Rests et doivent communiquer entre eux selon un certain schéma. User peut faire appel à Movie et Booking. Booking peut appeler Showtime. Le seul point d'entrée de l'application est l'API User.<br>
+
+Le microservice user est utilisé pour la gestion des utilisateurs. Le microservice movie contient les films et les informations à propos d'eux. Le microservice showtime contient les réservations effectuées par les utilisateurs avec leur nom, la date et les films concernés. Le microservice booking permet d'effectuer une réservation, notamment en vérifiant que le film est bien disponible à l'affiche pour le jour demandé.
 
 Chaque microservice contient un CRUD et certains des routes supplémentaires.
 
